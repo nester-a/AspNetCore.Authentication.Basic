@@ -12,7 +12,7 @@ namespace AspNetCore.Authentication.Basic
         public Func<MessageReceivedContext, Task> OnMessageReceived { get; set; } = context => Task.CompletedTask;
 
         /// <summary>Invoked if authentication fails during request processing. The exceptions will be re-thrown after this event unless suppressed.</summary>
-        public Func<FailedContext, Task> OnAuthenticationFailed { get; set; } = context => Task.CompletedTask;
+        public Func<FailedContext, Task> OnFailed { get; set; } = context => Task.CompletedTask;
 
         /// <summary>Invoked before a challenge is sent back to the caller.</summary>
         public Func<ChallengeContext, Task> OnChallenge { get; set; } = context => Task.CompletedTask;
@@ -26,7 +26,7 @@ namespace AspNetCore.Authentication.Basic
 
         /// <summary>Invoked if exceptions are thrown during request processing. The exceptions will be re-thrown after this event unless suppressed.</summary>
         /// <param name="context">The <see cref="FailedContext"/>.</param>
-        public virtual Task AuthenticationFailed(FailedContext context) => OnAuthenticationFailed(context);
+        public virtual Task Failed(FailedContext context) => OnFailed(context);
 
         /// <summary>Invoked if authorization fails and results in a Forbidden response</summary>
         /// <param name="context">The <see cref="ForbiddenContext"/>.</param>

@@ -20,7 +20,6 @@ namespace AspNetCore.Authentication.Basic
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-
             var cancellation = Request.HttpContext.RequestAborted;
             try
             {
@@ -138,7 +137,7 @@ namespace AspNetCore.Authentication.Basic
                 Exception = ex
             };
 
-            await Events.AuthenticationFailed(failedContext);
+            await Events.Failed(failedContext);
             if (failedContext.Result != null)
             {
                 return failedContext.Result;
