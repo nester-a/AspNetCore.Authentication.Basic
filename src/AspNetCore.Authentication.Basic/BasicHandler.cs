@@ -41,12 +41,12 @@ namespace AspNetCore.Authentication.Basic
                 {
                     var header = Request.Headers[HeaderNames.Authorization].ToString();
 
-                    if (string.IsNullOrWhiteSpace(header) || !header.StartsWith($"{BasicDefaults.AuthenticationScheme} "))
+                    if (string.IsNullOrWhiteSpace(header) || !header.StartsWith($"{Scheme.Name} "))
                     {
                         return AuthenticateResult.NoResult();
                     }
 
-                    var trimedHeader = header.Substring(BasicDefaults.AuthenticationScheme.Length).Trim();
+                    var trimedHeader = header.Substring(Scheme.Name.Length).Trim();
 
                     string encodedHeader;
 
@@ -85,9 +85,9 @@ namespace AspNetCore.Authentication.Basic
                     return await AuthenticationFailed(Options.IncorrectCredentialsFailureMessage);
                 }
 
-                var claimsIdentity = new ClaimsIdentity(claims, BasicDefaults.AuthenticationScheme);
+                var claimsIdentity = new ClaimsIdentity(claims, Scheme.Name);
 
-                var ticket = new AuthenticationTicket(new ClaimsPrincipal(claimsIdentity), BasicDefaults.AuthenticationScheme);
+                var ticket = new AuthenticationTicket(new ClaimsPrincipal(claimsIdentity), Scheme.Name);
 
                 return AuthenticateResult.Success(ticket);
             }
@@ -112,7 +112,7 @@ namespace AspNetCore.Authentication.Basic
                 return;
             }
 
-            Response.Headers.Append(HeaderNames.WWWAuthenticate, BasicDefaults.AuthenticationScheme);
+            Response.Headers.Append(HeaderNames.WWWAuthenticate, Scheme.Name);
 
             await base.HandleChallengeAsync(properties);
         }
