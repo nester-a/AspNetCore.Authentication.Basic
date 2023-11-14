@@ -8,7 +8,7 @@ To add Basic authentication in .NET Core, we need to modify `Program.cs` file. *
 
 Add the code to configure Basic authentication right above the `builder.Services.AddAuthentication()` line:
 
-```
+```c#
 builder.Services.AddAuthentication()
                 .AddBasic(BasicDefaults.AuthenticationScheme);
 ```
@@ -17,7 +17,7 @@ builder.Services.AddAuthentication()
 
 To configure Basic authentication, we need use delegate from overloaded method `AddBasic(string authenticationScheme, Action<BasicOptions> configure)`:
 
-```
+```c#
 builder.Services.AddAuthentication()
                 .AddBasic(BasicDefaults.AuthenticationScheme, configure => {
                     //some options will be here
