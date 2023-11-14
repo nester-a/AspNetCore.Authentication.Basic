@@ -47,18 +47,18 @@ namespace AspNetCore.Authentication.Basic
 
                     var trimedHeader = header.Substring(Scheme.Name.Length).Trim();
 
-                    string encodedHeader;
+                    string decodedHeader;
 
                     if (Options.EncodedHeaderAsyncDecoder != null)
                     {
-                        encodedHeader = await Options.EncodedHeaderAsyncDecoder(trimedHeader, cancellation);
+                        decodedHeader = await Options.EncodedHeaderAsyncDecoder(trimedHeader, cancellation);
                     }
                     else
                     {
-                        encodedHeader = Options.EncodedHeaderDecoder(trimedHeader);
+                        decodedHeader = Options.EncodedHeaderDecoder(trimedHeader);
                     }
 
-                    var dataArr = encodedHeader.Split(Options.CredentialsSeparator);
+                    var dataArr = decodedHeader.Split(Options.CredentialsSeparator);
 
                     if (dataArr.Length != 2)
                     {
