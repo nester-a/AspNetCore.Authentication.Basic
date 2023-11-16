@@ -67,3 +67,6 @@ builder.Services.AddAuthentication()
                 });
 ```
 
+
+### ClaimsPrincipal object creation
+
