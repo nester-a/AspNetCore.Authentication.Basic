@@ -69,4 +69,53 @@ builder.Services.AddAuthentication()
 
 
 ### ClaimsPrincipal object creation
+After decoding user credentials, it will be split into two separed strings (user-id and password). Then user-id and password will be used to create `Claim[]` by `ClaimsFactory` option for final `ClaimsIdentity`.
+By default this `ClaimsFactory` creates `Claim[]` with only one `Claim` with type [NameIdentifier](https://learn.microsoft.com/ru-ru/dotnet/api/system.security.claims.claimtypes.nameidentifier?view=netcore-3.0).
+If you need add another claims or get claims from storage, you can overload `ClaimsFactory` option:
+```c#
+builder.Services.AddAuthentication()
+                .AddBasic(BasicDefaults.AuthenticationScheme, configure => {
+                    configure.ClaimsFactory = (userId, password) => GetUserClaimsFromStorage(userId, password);
+                });
+```
+Or you can use `AsyncClaimsFactory` for asynchronous `Claim[]` create:
+```c#
+builder.Services.AddAuthentication()
+                .AddBasic(BasicDefaults.AuthenticationScheme, configure => {
+                    configure.AsyncClaimsFactory = async (userId, password, cancellationToken) => await GetUserClaimsFromStorageAsync(userId, password, cancellationToken);
+                });
+```
+Same as when you use header decoding option, if both the `AsyncClaimsFactory` and `ClaimsFactory` options are implemented, `BasicHandler` will use only `AsyncClaimsFactory` to work:
+```c#
+builder.Services.AddAuthentication()
+                .AddBasic(BasicDefaults.AuthenticationScheme, configure => {
+                    //This one will be used
+                    configure.AsyncClaimsFactory = async (userId, password, cancellationToken) => await GetUserClaimsFromStorageAsync(userId, password, cancellationToken);
 
+                    //This one will be ignored
+                    configure.ClaimsFactory = (userId, password) => GetUserClaimsFromAnotherStorage(userId, password);
+                });
+```
+
+## Basic Authentication Events
+The following events may occur during Basic authentication, which we can handle:
+* `OnMessageReceived` - Invoked when a protocol message is first received.
+* `OnFailed` - Invoked if authentication fails during request processing. The exceptions will be re-thrown after this event unless suppressed.
+* `OnChallenge` - Invoked before a challenge is sent back to the caller.
+* `OnForbidden` - Invoked if authorization fails and results in a Forbidden response.
+
+All this events is part of `BasicEvents` object.
+
+Events handling is the same as in other authentication schemes:
+```c#
+builder.Services.AddAuthentication()
+                .AddBasic(BasicDefaults.AuthenticationScheme, configure => {
+                    configure.Events = new BasicEvents()
+                    {
+                        OnMessageReceived = context => {
+                            //handle this event
+                            return Task.CompletedTask;
+                        }
+                    }
+                });
+```
