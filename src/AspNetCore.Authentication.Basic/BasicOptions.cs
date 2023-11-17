@@ -21,7 +21,7 @@ namespace AspNetCore.Authentication.Basic
         public Func<string, string> EncodedHeaderDecoder { get; set; } = defaultBase64EncodedString =>
         {
             var bytes = Convert.FromBase64String(defaultBase64EncodedString);
-            return Encoding.UTF8.GetString(bytes);
+            return Encoding.ASCII.GetString(bytes);
         };
 
         public Func<string, CancellationToken, Task<string>> EncodedHeaderAsyncDecoder { get; set; } = null;
