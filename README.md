@@ -2,6 +2,9 @@
 
 This project contains an implementation of **Basic Authentication Scheme** for ASP.NET Core. See the [RFC-7617](https://www.ietf.org/rfc/rfc7617.txt).
 
+IMPORTANT.
+This package has been deprecated as it is legacy and is no longer maintained. Please use [AN.Authentication.Basic](https://github.com/nester-a/AN.Authentication.Basic)
+
 ## Add Basic Authentication
 
 To add Basic authentication in .NET Core, we need to modify `Program.cs` file. **If you are using .NET Core version 5 or less, you have to add the modifications in the** `Startup.cs` **file inside the** `ConfigureServices` **method.**
